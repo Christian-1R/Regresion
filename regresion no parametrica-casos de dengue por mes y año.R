@@ -1,6 +1,7 @@
 ## Regresión no paramétrica para Imputación de datos
 
-datos_IRA = data.frame(datosDengue_TABLA)
+library(readxl)
+datos_DEN = data.frame(datosDengue_TABLA)
 
 head(datosDengue_TABLA)
 
@@ -29,6 +30,8 @@ for (i in 1:8) {
 }
 
 # Asignar NA (los datos que no se conocen)
+datosDengue_TABLA$semana[which(datosDengue_TABLA$año == (2015))
+
 
 conteo[53, c(1:5, 7)] = NA
 conteo1 = ts(c(conteo))
@@ -47,7 +50,6 @@ semanas
 
 which(semanas == "2014-12-28")
 
-#install.packages("npregfast")
 
 library(npregfast)
 
@@ -79,40 +81,42 @@ np_df = data.frame(np_casos$p)
 np_df
 
 
-plot(tabla$semanas, tabla$casos, pch = 20)
-lines(tabla$semanas, np_df$X1, col = "red", lwd = 2)
 
+plot(tabla$semanas[1:13], tabla$casos[1:13], pch = 20)
+lines(tabla$semanas, np_df$X1, col = "red", lwd = 2)
+tabla$casos[1]
 plot(np_df$X2, type = "l", lwd = 2)
 abline(h = 0, col = "blue", lwd = 2)
 abline(v = which(abs(np_df$X2) < 0.03), col = "red", lwd = 2)
-np_df$X2[which(abs(np_df$X2) < 0.03)]
+np_df$X2[which(abs(np_df$X2) < 0.095)]  #0.03, 0.025, 0.04, 0.035, 0.05
 
-puntos_infle = c(13, 40, 118, 137, 160, 318, 361, 378)
-
+#puntos_infle = c(13, 40, 118, 137, 160, 318, 361, 378)
+#puntos_infle = c(13,40, 65, 118,137,160,318,361,378)
+puntos_infle = c(13,40, 65, 118,137,160,242,318,361,378)
 plot(tabla$semanas, tabla$casos, pch = 20)
 lines(tabla$semanas, np_df$X1, col = "red", lwd = 2)
 abline(v = tabla$semanas[puntos_infle], col = "purple", lwd = 2)
++
+scale_x_date(date_breaks = "6 months", date_labels = "%m-%y")
 
-####-------------------------------------
 
-######-------------------------------------------------
-library(ggplot2)
+### pasar a gráfico ggplot
+
 x <- tabla$semanas
-y <- np_df$X1
-# Convertir los datos en un data frame
-df <- data.frame(x = x, y = y)
+y <- tabla$casos.1.389.
 
-## segundo conjunto de datos a graficar
-z <- tabla$semanas
-w <- tabla$casos.1.389.
 # Convertir los datos en un data frame
-df2 <-  data.frame(z=z,w=w)
+df <- data.frame(x=x,y=y)
 
+
+
+library(ggplot2)
 # Gráfico con ggplot2
 ggplot(df, aes(x = x, y = y)) +
-  #geom_point(color = "red", size = 1) +  # Puntos personalizados
-  geom_line(color = "red", linetype = "solid") +
-  geom_point(data = df2,aes(x=z,y=w), color = "blue", size=1) +
+  geom_point(color = "blue", size = 1) +  
+  geom_vline(xintercept = tabla$semanas[puntos_infle], color = "purple", linetype = "solid", size = 1.2)+
+  geom_line(aes(x=x,y = np_df$X1), color= "red", linetype="solid")+
   xlab("Mes-Año") +
   ylab("No. de casos")+
-  scale_x_date(date_breaks = "6 months", date_labels = "%m-%y")
+  scale_x_date(date_breaks = "3 months", date_labels = "%m-%y") 
+
