@@ -11,6 +11,7 @@ datos_2022 = datosDengue_TABLA[which(datosDengue_TABLA$año == 2022), ]
 semanas = seq(as.Date("2015-01-04"), as.Date("2022-06-18"), by = "week")
 
 
+
 # Crear una matriz para conteo de casos por semana y año
 conteo = matrix(0, nrow = 53, ncol = length(2015:2022))
 # Rellenar la matriz con los conteos semanales

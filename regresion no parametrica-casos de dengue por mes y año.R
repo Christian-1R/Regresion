@@ -36,6 +36,7 @@ datosDengue_TABLA$semana[which(datosDengue_TABLA$año == (2015))
 conteo[53, c(1:5, 7)] = NA
 conteo1 = ts(c(conteo))
 
+
 library(imputeTS)
 conteo2 = na_interpolation(conteo1, option = "spline")
 
@@ -108,15 +109,48 @@ y <- tabla$casos.1.389.
 # Convertir los datos en un data frame
 df <- data.frame(x=x,y=y)
 
-
+##agrego la información para gráficar la estimación de I_h(t).
 
 library(ggplot2)
 # Gráfico con ggplot2
 ggplot(df, aes(x = x, y = y)) +
   geom_point(color = "blue", size = 1) +  
   geom_vline(xintercept = tabla$semanas[puntos_infle], color = "purple", linetype = "solid", size = 1.2)+
-  geom_line(aes(x=x,y = np_df$X1), color= "red", linetype="solid")+
+  geom_line(aes(x=x,y = np_df$X1), color= "red", linetype="solid",size=1.5)+
   xlab("Mes-Año") +
   ylab("No. de casos")+
   scale_x_date(date_breaks = "3 months", date_labels = "%m-%y") 
 
+plot(x,np_df$X2, col="blue", pch=20)
+abline(h = 0, col = "red", lwd = 2)
+abline(v= x[c(13,40,65,118,137,160,242,318,361,378)], col="purple",lwd=2 )
+
+
+###Gráfica solo de la función y los puntos #####
+
+library(ggplot2)
+# Gráfico con ggplot2
+ggplot(df, aes(x = x, y = y)) +
+  geom_point(color = "blue", size = 1) +  
+  geom_line(aes(x=x,y = np_df$X1), color= "red", linetype="solid",size=1.5)+
+  xlab("Mes-Año") +
+  ylab("No. de personas infectadas")+
+  scale_x_date(date_breaks = "3 months", date_labels = "%m-%y") 
+
+## convertir gráfica de la derivada a ggplot
+
+install.packages("ggplot2")
+library(ggplot2)
+
+x <- tabla$semanas
+y <- np_df$X2
+
+df2 <- data.frame(x = x, y = y)
+
+ggplot(df2, aes(x = x, y = y)) +  # Asegúrate de usar ggplot, no ggpot
+  geom_line(color = "blue", size = 1.5) +
+  geom_vline(xintercept = x[c(13, 40, 65, 118, 137, 160, 242, 318, 361, 378)], 
+             color = "purple", linetype = "solid", size = 1.2) +
+  geom_hline(yintercept = 0, color = "red", linetype = "solid", size = 1)+
+  xlab("Año") +
+  ylab(expression(phi * "'(x)"))
